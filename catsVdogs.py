@@ -60,7 +60,7 @@ train_X = X[:-val_size]
 train_y = y[:-val_size]
 test_X = X[-val_size:]
 test_y = y[-val_size:]
-EPOCHS = 10
+EPOCHS = 5
 BATCH_SIZE = 100
 
 
@@ -78,6 +78,7 @@ def train(net):
             loss = loss_function(outputs, batch_y)
             loss.backward()
             optimizer.step()
+    return loss
     print(loss)
 
 def test(net):
@@ -92,5 +93,12 @@ def test(net):
                 correct += 1
             total += 1
             print(correct/total*100)
-train(net)
+loss = train(net)
 test(net)
+
+torch.save({
+    'epoch': EPOCHS,
+    'model_state_dict': net.state_dict(),
+    'optimizer_state_dict': optimizer.state_dict(),
+    'loss': loss
+    }, "model.pth")
